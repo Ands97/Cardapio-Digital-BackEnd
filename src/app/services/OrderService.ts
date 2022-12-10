@@ -20,17 +20,16 @@ class OrderService implements IOrderService {
 		}
 	}
 
-	public async createOrders(data: IOrder): Promise<boolean> {
+	public async createOrders(data: IOrder): Promise<IOrder | undefined> {
 		try {
 			const orderCreated = await this._repo.createOrders(data);
 
 			if (!orderCreated) {
-				return false;
+				return;
 			}
-			return true;
+			return orderCreated;
 		} catch (error) {
 			console.log("OrderService > CreateOrder", error);
-			return false;
 		}
 	}
 

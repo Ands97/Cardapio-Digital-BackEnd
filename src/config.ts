@@ -7,4 +7,7 @@ export default {
 	db: {
 		url: process.env.MONGO_URL as string,
 	},
+	jwt: {
+		secret: process.env.JWT_SECRET_KEY as string,
+	},
 };

@@ -6,6 +6,7 @@ import multer from "multer";
 import CategoryController from "./app/controllers/CategoryController";
 import ProductController from "./app/controllers/ProductController";
 import OrdersController from "./app/controllers/OrdersController";
+import UserController from "./app/controllers/UserController";
 
 export const router = Router();
 
@@ -53,3 +54,6 @@ router.patch("/orders/:orderId", OrdersController.updateOrder);
 
 // Delete orders
 router.delete("/orders/:orderId", OrdersController.deleteOrder);
+
+//Create User
+router.post("/auth/register", UserController.register);

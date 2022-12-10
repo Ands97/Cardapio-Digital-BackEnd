@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { io } from "../..";
 import OrderFactory from "../factories/OrderFactory";
 
 class OrdersController {
@@ -26,9 +27,9 @@ class OrdersController {
 			const data = req.body;
 			const service = new OrderFactory().getService();
 
-			const categories = await service.createOrders(data);
-
-			res.status(201).json(categories);
+			const order = await service.createOrders(data);
+			io.emit("newOrder", order);
+			res.status(201).json(order);
 		} catch (error) {
 			console.log("OrdersController > CreateOrders", error);
 			res.status(500).json({

@@ -1,15 +1,27 @@
 import express from "express";
+import http from "node:http";
 import "dotenv/config";
 import path from "node:path";
 import config from "./config";
 import mongoose from "mongoose";
 import { router } from "./router";
+import { Server } from "socket.io";
+
+const app = express();
+const server = http.createServer(app);
+export const io = new Server(server, {
+	transports: ["websocket"],
+});
 
 mongoose
 	.connect(config.db.url)
 	.then(() => {
-		const app = express();
-
+		app.use((req, res, next) => {
+			res.setHeader("Access-Control-Allow-Origin", "*");
+			res.setHeader("Access-Control-Allow-Methods", "*");
+			res.setHeader("Access-Control-Allow-Headers", "*");
+			next();
+		});
 		app.use(
 			"/uploads",
 			express.static(path.resolve(__dirname, "..", "uploads"))
@@ -17,7 +29,7 @@ mongoose
 		app.use(express.json());
 		app.use(router);
 
-		app.listen(config.server.port, () => {
+		server.listen(config.server.port, () => {
 			console.log(`Server is running on port: ${config.server.port}`);
 		});
 	})

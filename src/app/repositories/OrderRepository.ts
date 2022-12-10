@@ -18,17 +18,18 @@ class OrderRepository implements IOrderRepository {
 		}
 	}
 
-	public async createOrders(data: IOrder): Promise<boolean> {
+	public async createOrders(data: IOrder): Promise<IOrder | undefined> {
 		try {
-			console.log(data);
-			const OrderCreated = await Order.create(data);
-			if (!OrderCreated) {
-				return false;
+			const orderCreated = await Order.create(data);
+			if (!orderCreated) {
+				return;
 			}
-			return true;
+
+			const orderDetails = await orderCreated.populate("products.product");
+
+			return orderDetails;
 		} catch (error) {
 			console.log("OrderRepository > CreateOrder", error);
-			return false;
 		}
 	}
 
